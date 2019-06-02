@@ -8,7 +8,7 @@ HISTSIZE=10000
 HISTFILESIZE=20000
 
 # set our prompt
-PROMPT_COMMAND='PS1="\u@\h \w$(get_git_prompt) \$ "';
+PROMPT_COMMAND='PS1="$(colorcode darkgrey)[\t] $(colorcode magenta)\u$(colorcode darkgrey):$(colorcode cyan)\W/$(colorcode red)$(get_git_prompt) $(colorcode green)\$$(colorcode default) "';
 
 alias ls="ls -lFh";
 alias rmrf='rm -rf';

@@ -19,10 +19,11 @@ function getGitBranch () {
     # the dev/null means we won't get "fatal:" output in a non-git branch
     string="$(git branch 2>/dev/null | grep '^*')";
     # If it contains a color excape sequence we should truncate more
+    # the sed call removes the color control codes that *may* be present
     if [[ $string == *";"* ]]; then
-        git branch 2>/dev/null | grep '^*' | colrm 1 8
+        git branch 2>/dev/null | grep '^*' | colrm 1 8 | sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g'
     else
-        git branch 2>/dev/null | grep '^*' | colrm 1 2
+        git branch 2>/dev/null | grep '^*' | colrm 1 2 | sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g'
     fi
 }
 

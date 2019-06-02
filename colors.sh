@@ -140,6 +140,7 @@ function getBGColor () {
     fi
 }
 
+
 function colorize() {
     local code="$1";
     local content="$2";
@@ -148,6 +149,34 @@ function colorize() {
     local reset="\001\033[0m${term}";
     local resultString="${escape}$content${reset}";
     echo "$resultString";
+}
+
+function colorcode() {
+    local fgColor="$1";
+    local bgColor="$2";
+    local format="$3";
+    local code="";  
+    if [[ "$fgColor" ]]; then
+        code="$(echo "$(getFGColor $fgColor)")";
+    fi
+    if [[ "$bgColor" ]]; then
+        echo "$bgColor";
+        if [[ "$code" ]]; then
+            code="$(echo "$code");$(echo "$(getBGColor $bgColor)")"
+        else
+            code="$(echo "${getBGColor $bgColor}")"
+        fi
+    fi
+    if [[ "$format" ]]; then
+        if [[ "$code" ]]; then
+            code="$(echo "$code");$(echo "$(getFormat $format)")"
+        else
+            code="$(echo "${getFormat $format}")";
+        fi
+    fi
+    local escape="\001\033[${code}m${term}";
+    local resultString="${escape}";
+    echo "\[$resultString\]";
 }
 
 function paint() {
