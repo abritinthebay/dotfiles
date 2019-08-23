@@ -5,7 +5,7 @@ alias pull="git pull"
 alias push="git push"
 alias gitgraph='git log --graph --oneline --decorate --all'
 alias gitdetail='git log --pretty=format:"%h %ad %s" --date=short --all'
-
+alias gitsetorigin='git remote add origin'
 # enable git rerere
 git config --global rerere.enabled true
 # enable git rere to auto-stage files it solved
