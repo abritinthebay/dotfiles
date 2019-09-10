@@ -3,9 +3,12 @@ alias merge="git merge"
 alias branch="git branch"
 alias pull="git pull"
 alias push="git push"
-alias gitgraph='git log --graph --oneline --decorate --all'
+alias addall="git add --all"
+alias gitgraph="git log --graph --oneline --decorate --all"
 alias gitdetail='git log --pretty=format:"%h %ad %s" --date=short --all'
-alias gitsetorigin='git remote add origin'
+alias gitsetorigin="git remote add origin"
+alias newfeature="feature_branch"
+
 # enable git rerere
 git config --global rerere.enabled true
 # enable git rere to auto-stage files it solved
@@ -77,12 +80,8 @@ function feature_branch() {
     if [ "$branchName" != "" ]; then
         echo "Checking out and updating master";
         git checkout master && git pull;
-        echo "Creating local branch"
-        git checkout -b "$branchName";
-        echo "Seting remote as upstream & pushing local branch"
-        git push --set-upstream origin "$branchName";
-         # Technically the same as above but... seems to occationally be needed
-        git push -u;
+        echo "Creating local branch from master and tracking origin"
+        git checkout -b "$branchName" -t origin/master
     else
         echo "No branch name provided!"
     fi
@@ -97,8 +96,9 @@ function git_remote_url_to_web_url() {
 
 # Open a PR against <base_branch> (master by default) for the current branch
 # on <remote_name> (origin by default)
+# works for GITHUB only
 # Usage: opr [<base_branch>] [<remote_name>]
-function openpr() {
+function ghpr() {
     if ! git_is_repository; then
         echo 'Not a git repository.'
         return
