@@ -18,3 +18,24 @@ function gifify() {
 weather() {
     curl -s "https://wttr.in/${1:-}" | sed -n "1,27p"
 }
+
+bytesToHuman() {
+    if (( $# == 0 )) ; then
+      b=$(</dev/stdin);
+    else
+      b=${1:-0};
+    fi
+    d=''; s=0; S=(B {K,M,G,T,P,E,Z,Y}iB)
+    while ((b > 1024)); do
+        d="$(printf ".%02d" $((b % 1024 * 100 / 1024)))"
+        b=$((b / 1024))
+        let s++
+    done
+    echo "$b$d ${S[$s]}"
+}
+
+gzsize() {
+  d=$(<$1);
+  echo "original: $(echo $d | wc -c | bytesToHuman)";
+  echo " gzipped: $(gzip -c $1 | wc -c | bytesToHuman)";
+}
