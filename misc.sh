@@ -35,7 +35,13 @@ bytesToHuman() {
 }
 
 gzsize() {
-  d=$(<$1);
-  echo "original: $(echo $d | wc -c | bytesToHuman)";
-  echo " gzipped: $(gzip -c $1 | wc -c | bytesToHuman)";
+  if (( $# == 0 )) ; then
+    echo "No file specified!";
+    echo "Usage: gzsize <file>";
+    echo "";
+  else
+    d=$(<$1);
+    echo "original: $(echo $d | wc -c | bytesToHuman)";
+    echo " gzipped: $(gzip -c $1 | wc -c | bytesToHuman)";
+  fi
 }
