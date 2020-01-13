@@ -1,11 +1,12 @@
 
 function fractionalSecond() {
-    echo "$(python -c 'import time; from decimal import *; time=Decimal(time.time()); rounded = int(time); print time - rounded;')";
+    python -c 'import time; from decimal import *; time=Decimal(time.time()); rounded = int(time); print time - rounded;'
 }
 function milliseconds() {
-    local frac="$(fractionalSecond)";
+    local frac;
+    frac="$(fractionalSecond)";
     local milli="${frac: 1: 5}";
-    echo $milli;
+    echo "$milli";
 }
 
 function timezone () {
@@ -16,7 +17,7 @@ function timezone () {
         }
 }
 
-alias now="date +"%T""                                      # current time in hh:mm:ss format
-alias nowdate="date +"%d-%m-%Y""                            # current date in dd-mm-yyyy format
-alias nowiso="date +"%Y-%m-%dT%T`milliseconds``timezone`""  # ISO 8601 date format (2018-06-29T15:58:36+00:00)
-alias nowisoweek="date +"%Y-W%W-%w""                        # ISO 8601 date-week format (2018-W27-1) ([year]-W[week number]-[day number])
+alias now='date +%T'                                        # current time in hh:mm:ss format
+alias nowdate='date +%d-%m-%Y'                              # current date in dd-mm-yyyy format
+alias nowiso='date +%Y-%m-%dT%T$(milliseconds)$(timezone)'  # ISO 8601 date format (2018-06-29T15:58:36+00:00)
+alias nowisoweek='date +%Y-W%W-%w'                          # ISO 8601 date-week format (2018-W27-1) ([year]-W[week number]-[day number])

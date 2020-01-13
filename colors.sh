@@ -140,7 +140,6 @@ function getBGColor () {
     fi
 }
 
-
 function colorize() {
     local code="$1";
     local content="$2";
@@ -157,19 +156,19 @@ function colorcode() {
     local format="$3";
     local code="";  
     if [[ "$fgColor" ]]; then
-        code="$(echo "$(getFGColor $fgColor)")";
+        code="$(getFGColor "$fgColor")";
     fi
     if [[ "$bgColor" ]]; then
         echo "$bgColor";
         if [[ "$code" ]]; then
-            code="$(echo "$code");$(echo "$(getBGColor $bgColor)")"
+            code="$(echo "$code");$(echo "$(getBGColor "$bgColor")")"
         else
             code="$(echo "${getBGColor $bgColor}")"
         fi
     fi
     if [[ "$format" ]]; then
         if [[ "$code" ]]; then
-            code="$(echo "$code");$(echo "$(getFormat $format)")"
+            code="$(echo "$code");$(echo "$(getFormat "$format")")"
         else
             code="$(echo "${getFormat $format}")";
         fi
@@ -187,19 +186,19 @@ function paint() {
     local code="";
     if [[ "$content" ]]; then
         if [[ "$fgColor" ]]; then
-            code="$(echo "$(getFGColor $fgColor)")";
+            code="$(echo "$(getFGColor "$fgColor")")";
         fi
         if [[ "$bgColor" ]]; then
             echo "$bgColor";
             if [[ "$code" ]]; then
-                code="$(echo "$code");$(echo "$(getBGColor $bgColor)")"
+                code="$(echo "$code");$(echo "$(getBGColor "$bgColor")")"
             else
                 code="$(echo "${getBGColor $bgColor}")"
             fi
         fi
         if [[ "$format" ]]; then
             if [[ "$code" ]]; then
-                code="$(echo "$code");$(echo "$(getFormat $format)")"
+                code="$(echo "$code");$(echo "$(getFormat "$format")")"
             else
                 code="$(echo "${getFormat $format}")";
             fi

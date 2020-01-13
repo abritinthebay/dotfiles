@@ -1,4 +1,4 @@
-#set the generic editor
+##set the generic editor
 export EDITOR=code
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -36,27 +36,27 @@ function up() {
   times=$1
   while [ "$times" -gt "0" ]; do
     cd ..
-    times=$(($times - 1))
+    times=$((times - 1))
   done
 }
 
 # Who has time to remember the right extract commands 
 # for all the possible formats?
 function extract () {
-  if [ -f $1 ] ; then
+  if [ -f "$1" ] ; then
     case $1 in
-      *.tar.bz2)   tar xvjf $1    ;;
-      *.tar.gz)    tar xvzf $1    ;;
-      *.tar.xz)    tar Jxvf $1    ;;
-      *.bz2)       bunzip2 $1     ;;
-      *.rar)       rar x $1       ;;
-      *.gz)        gunzip $1      ;;
-      *.tar)       tar xvf $1     ;;
-      *.tbz2)      tar xvjf $1    ;;
-      *.tgz)       tar xvzf $1    ;;
-      *.zip)       unzip -d `echo $1 | sed 's/\(.*\)\.zip/\1/'` $1;;
-      *.Z)         uncompress $1  ;;
-      *.7z)        7z x $1        ;;
+      *.tar.bz2)   tar xvjf "$1"    ;;
+      *.tar.gz)    tar xvzf "$1"    ;;
+      *.tar.xz)    tar Jxvf "$1"    ;;
+      *.bz2)       bunzip2 "$1"     ;;
+      *.rar)       rar x "$1"       ;;
+      *.gz)        gunzip "$1"      ;;
+      *.tar)       tar xvf "$1"     ;;
+      *.tbz2)      tar xvjf "$1"    ;;
+      *.tgz)       tar xvzf "$1"    ;;
+      *.zip)       unzip -d "$(echo "$1" | sed 's/\(.*\)\.zip/\1/')" "$1";;
+      *.Z)         uncompress "$1"  ;;
+      *.7z)        7z x "$1"        ;;
       *)           echo "Sorry, I don't know how to extract '$1'" ;;
     esac
   else
@@ -68,13 +68,7 @@ function extract () {
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion || {
     # if not found in /usr/local/etc, try the brew --prefix location
     [ -f "$(brew --prefix)/etc/bash_completion.d/git-completion.bash" ] && \
-        . $(brew --prefix)/etc/bash_completion.d/git-completion.bash
+        . "$(brew --prefix)/etc/bash_completion.d/git-completion.bash"
 }
-# load NVM bash completions
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 # load Project completion
-[ -s "~/.dotfiles/project.bash" ] && \. "~/.dotfiles/project.bash"
-
-
-
-
+[ -s "$HOME/.dotfiles/project.bash" ] && \. "~/.dotfiles/project.bash"

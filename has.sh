@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-## source: https://github.com/kdabir/has
-
 ## To add more tools, search for "__detect" function in this file
 
 ## Important so that version is not extracted for failed commands (not found)
@@ -13,14 +11,9 @@ function has() {
     ## constants - symbols for success failure
     txtreset="$(tput sgr0)"
     txtbold="$(tput bold)"
-    txtblack="$(tput setaf 0)"
     txtred="$(tput setaf 1)"
     txtgreen="$(tput setaf 2)"
     txtyellow="$(tput setaf 3)"
-    txtblue="$(tput setaf 4)"
-    txtpurple="$(tput setaf 5)"
-    txtcyan="$(tput setaf 6)"
-    txtwhite="$(tput setaf 7)"
     # unicode "✗"
     fancyx='\342\234\227'
     # unicode "✓"

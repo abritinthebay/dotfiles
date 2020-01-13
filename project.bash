@@ -1,11 +1,11 @@
 #compdef project
 function _project {
-  for proj in $(find "$PROJECT_DIRECTORY" -mindepth 1 -maxdepth 1 -type d)
+  while IFS= read -r -d '' proj
   do
-    if [[ ! $(basename $proj) == '.git' ]]; then
-      compadd "$(basename $proj)"
+     if [[ ! $(basename "$proj") == '.git' ]]; then
+      compadd "$(basename "$proj")"
     fi
-  done
+  done <   <(find "$PROJECT_DIRECTORY" -mindepth 1 -maxdepth 1 -type d)
 }
 
 _project

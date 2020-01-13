@@ -1,3 +1,4 @@
+#!/bin/bash
 alias co="git checkout"
 alias merge="git merge"
 alias branch="git branch"
@@ -38,9 +39,9 @@ function gitfind () {
 function describeGitBranch () {
     if [ "$(getGitBranch)" != "" ]; then
         if [ -z "$1" ]; then
-            echo "$(git config branch.$(getGitBranch).description)";
+            git config branch."$(getGitBranch)".description;
         else
-            git config branch.$(getGitBranch).description "$1";
+            git config branch."$(getGitBranch)".description "$1";
         fi
     fi
 }
@@ -51,7 +52,7 @@ function getGitStatus () {
     # ' ' = unmodified, M = modified, A = added, D = deleted, R = renamed, C = copied, U = unmerged
     git status --porcelain  2>/dev/null | (
         unset dirty deleted untracked newfile ahead renamed
-        while read line ; do
+        while read -r line ; do
             case "$line" in
             *"M "*)                           dirty='*' ; ;;
             *"D "*)                           deleted='-' ; ;;

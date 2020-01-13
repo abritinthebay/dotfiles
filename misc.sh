@@ -29,7 +29,7 @@ bytesToHuman() {
     while ((b > 1024)); do
         d="$(printf ".%02d" $((b % 1024 * 100 / 1024)))"
         b=$((b / 1024))
-        let s++
+        (( s++ ))
     done
     echo "$b$d ${S[$s]}"
 }
@@ -40,8 +40,8 @@ gzsize() {
     echo "Usage: gzsize <file>";
     echo "";
   else
-    d=$(<$1);
-    echo "original: $(echo $d | wc -c | bytesToHuman)";
-    echo " gzipped: $(gzip -c $1 | wc -c | bytesToHuman)";
+    d=$(<"$1");
+    echo "original: $(echo "$d" | wc -c | bytesToHuman)";
+    echo " gzipped: $(gzip -c "$1" | wc -c | bytesToHuman)";
   fi
 }
