@@ -71,4 +71,4 @@ function extract () {
         . "$(brew --prefix)/etc/bash_completion.d/git-completion.bash"
 }
 # load Project completion
-[ -s "$HOME/.dotfiles/project.bash" ] && \. "~/.dotfiles/project.bash"
+[ -s "$HOME/.dotfiles/project.bash" ] && \. "$HOME/.dotfiles/project.bash"

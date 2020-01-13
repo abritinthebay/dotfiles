@@ -5,7 +5,7 @@ function _project {
      if [[ ! $(basename "$proj") == '.git' ]]; then
       compadd "$(basename "$proj")"
     fi
-  done <   <(find "$PROJECT_DIRECTORY" -mindepth 1 -maxdepth 1 -type d)
+  done < <(find "$PROJECT_DIRECTORY" -mindepth 1 -maxdepth 1 -type d)
 }
 
 _project
