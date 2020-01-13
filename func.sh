@@ -71,7 +71,7 @@ map() {
 }
 
 foldl() {
-  local f="$@"
+  local f=$*
   local acc
   read -r acc
   while read -r elem; do
@@ -81,7 +81,7 @@ foldl() {
 }
 
 foldr() {
-  local f="$@"
+  local f=$*
   local acc
   local zero
   read -r zero
@@ -102,7 +102,7 @@ foldr() {
 }
 
 scanl() {
-  local f="$@"
+  local f=$*
   local acc
   read -r acc
   echo "$acc"
@@ -167,7 +167,7 @@ revers_str() {
 
 catch() {
   local f,cmd,val,cnt,status;
-  f="$@"
+  f=$*
   cmd=$(cat -)
   val=$(2>&1 eval "$cmd"; echo $?)
   cnt=$(list "$val" | wc -l)
@@ -176,7 +176,7 @@ catch() {
 }
 
 try() {
-  local f="$@"
+  local f=$*
   catch lambda cmd status val . '[[ $status -eq 0 ]] && tupx 1- $val | unlist || { '"$f"' < <(list $status); }'
 }
 
@@ -295,7 +295,7 @@ curry() {
 
 with_trampoline() {
   local f=$1; shift
-  local args=$@
+  local args=$*
   while [[ $f != 'None' ]]; do
     ret=$($f "$args")
 #    echo $ret
@@ -312,6 +312,6 @@ res() {
 
 call() {
     local f=$1; shift
-    local args=$@
+    local args=$*
     tup "$f" "$args"
 }
