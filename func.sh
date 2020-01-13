@@ -1,11 +1,10 @@
 #!/bin/bash
-
 drop() {
   command tail -n +$(($1 + 1))
 }
 
 take() {
-  command head -n ${1}
+  command head -n "${1}"
 }
 
 tail() {
@@ -57,8 +56,7 @@ lambda() {
     done
   }
 
-  eval $(lam "$@")
-
+  eval "$(lam "$@")"
 }
 
 λ() {
@@ -67,7 +65,7 @@ lambda() {
 
 map() {
   local x
-  while read x; do
+  while read -r x; do
     echo "$x" | "$@"
   done
 }
@@ -75,9 +73,9 @@ map() {
 foldl() {
   local f="$@"
   local acc
-  read acc
-  while read elem; do
-    acc="$({ echo $acc; echo $elem; } | $f )"
+  read -r acc
+  while read -r elem; do
+    acc="$({ echo "$acc"; echo "$elem"; } | $f )"
   done
   echo "$acc"
 }
@@ -86,18 +84,17 @@ foldr() {
   local f="$@"
   local acc
   local zero
-  read zero
+  read -r zero
   foldrr() {
     local elem
 
-    if read elem; then
+    if read -r elem; then
         acc=$(foldrr)
-#        [[ -z $acc ]] && echo $elem && return
     else
-        echo $zero && return
+        echo "$zero" && return
     fi
 
-    acc="$({ echo $acc; echo $elem; } | $f )"
+    acc="$({ echo "$acc"; echo "$elem"; } | $f )"
     echo "$acc"
   }
 
@@ -107,10 +104,10 @@ foldr() {
 scanl() {
   local f="$@"
   local acc
-  read acc
-  echo $acc
-  while read elem; do
-    acc="$({ echo $acc; echo $elem; } | $f )"
+  read -r acc
+  echo "$acc"
+  while read -r elem; do
+    acc="$({ echo "$acc"; echo "$elem"; } | $f )"
     echo "$acc"
   done
 }
@@ -145,7 +142,7 @@ product() {
 }
 
 factorial() {
-  seq 1 $1 | product
+  seq 1 "$1" | product
 }
 
 splitc() {
@@ -153,10 +150,11 @@ splitc() {
 }
 
 join() {
-  local delim=$1
-  local pref=$2
-  local suff=$3
-  echo $pref$(cat - | foldl lambda a b . 'echo $a$delim$b')$suff
+  local delim,pref,suff;
+  delim=$1
+  pref=$2
+  suff=$3
+  echo "$pref$(cat - | foldl lambda a b . "echo \$a$delim\$b")$suff";
 }
 
 revers() {
@@ -168,12 +166,13 @@ revers_str() {
 }
 
 catch() {
-  local f="$@"
-  local cmd=$(cat -)
-  local val=$(2>&1 eval "$cmd"; echo $?)
-  local cnt=$(list $val | wc -l)
-  local status=$(list $val | last)
-  $f < <(list "$cmd" $status $(list $val | take $((cnt - 1)) | unlist | tup))
+  local f,cmd,val,cnt,status;
+  f="$@"
+  cmd=$(cat -)
+  val=$(2>&1 eval "$cmd"; echo $?)
+  cnt=$(list "$val" | wc -l)
+  status=$(list "$val" | last)
+  $f < <(list "$cmd" "$status" "$(list "$val" | take $((cnt - 1)) | unlist | tup)")
 }
 
 try() {
@@ -182,14 +181,14 @@ try() {
 }
 
 ret() {
-  echo $@
+  echo "$@"
 }
 
 filter() {
   local x
-  while read x; do
+  while read -r x; do
     ret=$(echo "$x" | "$@")
-    $ret && echo $x
+    $ret && echo "$x"
   done
 }
 
@@ -199,28 +198,28 @@ pass() {
 
 dropw() {
   local x
-  while read x && $(echo "$x" | "$@"); do
+  while read -r x && echo "$x" | "$@"; do
     pass
   done
-  [[ ! -z $x ]] && { echo $x; cat -; }
+  [[ -n $x ]] && { echo "$x"; cat -; }
 }
 
 peek() {
   local x
-  while read x; do
-    ([ $# -eq 0 ] && 1>&2 echo $x || 1>&2 "$@" < <(echo $x))
-    echo $x
+  while read -r x; do
+    ([ $# -eq 0 ] && 1>&2 echo "$x" || 1>&2 "$@" < <(echo "$x"))
+    echo "$x"
   done
 }
 
 stripl() {
   local arg=$1
-  cat - | map lambda l . 'ret ${l##'$arg'}'
+  cat - | map lambda l . 'ret ${l##'"$arg"'}'
 }
 
 stripr() {
   local arg=$1
-  cat - | map lambda l . 'ret ${l%%'$arg'}'
+  cat - | map lambda l . 'ret ${l%%'"$arg"'}'
 }
 
 strip() {
@@ -230,25 +229,25 @@ strip() {
 
 buff() {
   local cnt=-1
-  for x in $@; do
+  for x in "$@"; do
     [[ $x = '.' ]] && break
     cnt=$(plus $cnt 1)
   done
   local args=''
   local i=$cnt
-  while read arg; do
-    [[ $i -eq 0 ]] && list $args | "$@" && i=$cnt && args=''
+  while read -r arg; do
+    [[ $i -eq 0 ]] && list "$args" | "$@" && i=$cnt && args=''
     args="$args $arg"
-    i=$(sub $i 1)
+    i=$(sub "$i" 1)
   done
-  [[ ! -z $args ]] && list $args | "$@"
+  [[ -n $args ]] && list "$args" | "$@"
 }
 
 tup() {
   if [[ $# -eq 0 ]]; then
     local arg
-    read arg
-    tup $arg
+    read -r arg
+    tup "$arg"
   else
     list "$@" | map lambda x . 'echo ${x/,/u002c}' | join , '(' ')'
   fi
@@ -257,12 +256,12 @@ tup() {
 tupx() {
   if [[ $# -eq 1 ]]; then
     local arg
-    read arg
+    read -r arg
     tupx "$1" "$arg"
   else
     local n=$1
     shift
-    echo "$@" | stripl '(' | stripr ')' | cut -d',' -f${n} | tr ',' '\n' | map lambda x . 'echo ${x/u002c/,}'
+    echo "$@" | stripl '(' | stripr ')' | cut -d',' -f"${n}" | tr ',' '\n' | map lambda x . 'echo ${x/u002c/,}'
   fi
 }
 
@@ -276,10 +275,10 @@ tupr() {
 
 zip() {
   local list=$*
-  cat - | while read x; do
-    y=$(list $list | take 1)
-    tup $x $y
-    list=$(list $list | drop 1)
+  cat - | while read -r x; do
+    y=$(list "$list" | take 1)
+    tup "$x" "$y"
+    list=$(list "$list" | drop 1)
   done
 }
 
@@ -291,28 +290,28 @@ curry() {
       more_params=\$*;
       $fun $params \$more_params;
   }"
-  eval $cmd
+  eval "$cmd"
 }
 
 with_trampoline() {
   local f=$1; shift
   local args=$@
   while [[ $f != 'None' ]]; do
-    ret=$($f $args)
+    ret=$($f "$args")
 #    echo $ret
-    f=$(tupl $ret)
-    args=$(echo $ret | tupx 2- | tr ',' ' ')
+    f=$(tupl "$ret")
+    args=$(echo "$ret" | tupx 2- | tr ',' ' ')
   done
-  echo $args
+  echo "$args"
 }
 
 res() {
     local value=$1
-    tup "None" $value
+    tup "None" "$value"
 }
 
 call() {
     local f=$1; shift
     local args=$@
-    tup $f $args
+    tup "$f" "$args"
 }

@@ -50,18 +50,19 @@ function describeGitBranch () {
 function getGitStatus () {
     # git status --porcelain output codes:
     # ' ' = unmodified, M = modified, A = added, D = deleted, R = renamed, C = copied, U = unmerged
+        unset modified added deleted copied renamed untracked
     git status --porcelain  2>/dev/null | (
-        unset dirty deleted untracked newfile ahead renamed
         while read -r line ; do
             case "$line" in
-            *"M "*)                           dirty='*' ; ;;
+            *"M "*)                           modified='*' ; ;;
+            *'A '*)                           added='+' ; ;;
             *"D "*)                           deleted='-' ; ;;
-            *"?? "*)                          untracked='?' ; ;;
-            *'A '*)                           ahead='+' ; ;;
             *"R "*)                           renamed='~' ; ;;
+            *"C "*)                           copied='=' ; ;;
+            *"?? "*)                          untracked='?' ; ;;
             esac
+        bits="$modified$deleted$untracked$copied$added$renamed"
         done
-        bits="$dirty$deleted$untracked$newfile$ahead$renamed"
         [ -n "$bits" ] && echo "$bits" || echo
     )
 }
