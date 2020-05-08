@@ -1,4 +1,3 @@
-#!/bin/bash
 alias co="git checkout"
 alias merge="git merge"
 alias branch="git branch"
@@ -14,6 +13,12 @@ alias newfeature="feature_branch"
 git config --global rerere.enabled true
 # enable git rere to auto-stage files it solved
 git config --global rerere.autoupdate true
+# setup git alias
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.cm commit
+# quick way to do fixup/squashes of recent commits.
+git config --global alias.ri 'rebase -i HEAD~4'
 
 function getGitBranchString () {
     git branch 2>/dev/null | grep '^\*';

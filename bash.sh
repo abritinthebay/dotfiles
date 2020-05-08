@@ -1,4 +1,4 @@
-##set the generic editor
+#set the generic editor
 export EDITOR=code
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -64,7 +64,11 @@ function extract () {
   fi
 }
 
+
+
+
 # load general bash completion
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 [ -f /usr/local/etc/bash_completion ];
 # load Project completion
 [ -s "$HOME/.dotfiles/project.bash" ];

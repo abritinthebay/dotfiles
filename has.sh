@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 ## To add more tools, search for "__detect" function in this file
 
 ## Important so that version is not extracted for failed commands (not found)
