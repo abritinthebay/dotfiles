@@ -1,4 +1,62 @@
 export CLICOLOR=1;
+# Change the colors of your Terminal
+# Now, let’s learn how we can configure our # Terminal to obtain the colors of the figure.
+#
+# Terminal custom colors
+# Colors can be changed using the LSCOLORS variable in the 
+# ~/.bash_profile. By default is set to
+#
+# LSCOLORS=exfxcxdxbxegedabagacad
+#
+# where the string exfxcxdxbxegedabagacad is a concatenation of 
+# pairs of the format TB, where T is the text color and B is the 
+# Background color.
+# 
+# The order of these pairs correspond to:
+# 1. directory
+# 2. symbolic link – special kind of file that contains a reference1
+#        to another file or directory.
+# 3. socket – special kind of file used for inter-process communication.
+# 4. pipe – special file that connects the output of one process to the
+#        input of another.
+# 5. executable
+# 6, block special – a kind of device file.
+# 7. character special – a kind of device file.
+# 8. executable with setuid bit set (setuid is a short for set user ID
+#        upon execution).
+# 9. executable with setgid bit set (setgid is a short for set group ID
+#        upon execution).
+# 10. directory writable to others, with sticky bit – only the owner can
+#       rename or delete files.
+# 11. directory writable to others, without sticky bit – any user with0
+#       write and execution permissions can rename or delete files.
+#
+# And the different letters correspond to:
+#   a black
+#   b red
+#   c green
+#   d brown
+#   e blue
+#   f magenta
+#   g cyan
+#   h light grey
+#   x default color
+#
+# The same letters in uppercase indicate Bold.
+#
+# The Terminal default colors, described by exfxcxdxbxegedabagacad, and ordered by file type / text color / background color, are:
+# ex –> directory / blue / default
+# fx –> symbolic link / magenta / default
+# cx –> socket / green / default
+# dx –> pipe / brown / default
+# bx –> executable / red / default
+# eg –> block special / blue / cyan
+# ed –> character special / blue / brown
+# ab –> executable with setuid / black / red
+# ag –> executable without setuid / black / cyan
+# ac –> directory with sticky / black / green
+# ad –> directory without sticky / black / brown
+
 # Formatting
 # Code    Description       Example
 # 1       Bold              echo -e "\033[1mBold"
