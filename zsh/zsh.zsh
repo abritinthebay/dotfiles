@@ -36,11 +36,11 @@ zstyle ':vcs_info:*' stagedstr '+'      # custom string for staged changes (+)
 zstyle ':vcs_info:git:*' formats       '(%b%u%c)'       # format for vcs_info
 zstyle ':vcs_info:git:*' actionformats '(%b|%a%u%c)'    # more formats for vcs_info
 
-# zstyle ':vcs_info:git:*' formats      $'%K{9}\ue0b0%F{0} \ue0a0 %b%u%c %F{9}'
-# zstyle ':vcs_info:git:*' actionformats $'%K{9}\ue0b0%F{0} \ue0a0 %b|%a%u%c %F{9}'
+# zstyle ':vcs_info:git:*' formats      $'%K{9}\ue0b0%F{52} \ue0a0 %b%u%c %f%k'
+# zstyle ':vcs_info:git:*' actionformats $'%K{9}\ue0b0%F{52} \ue0a0 %b|%a%u%c %f%k'
 # # Set up the prompt (with git branch name)
-# PROMPT=$'%F{0}%K{8}%*%F{8}%K{13}\ue0b0%F{0}%n%F{13}%K{14}\ue0b0%F{0}%1~%F{14}${vcs_info_msg_0_}%k %F{10}$%f%k '
-
+# PROMPT=$'%K{13}%F{53}%n%F{13}%K{14}\ue0b0%F{23}%1~%F{14}${vcs_info_msg_0_}%k%F{10} $%f%k '
+# RPROMPT=$' %F{8}%K{0}\ue0b2%F{234}%K{8}%*'
 
 #### Prompt ####
 # Set up the Prompt (with git branch name)
