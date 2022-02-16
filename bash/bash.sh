@@ -4,8 +4,8 @@ export EDITOR=code
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=10000
-HISTFILESIZE=20000
+HISTSIZE=2000
+HISTFILESIZE=5000
 
 # set our prompt
 PROMPT_COMMAND='PS1="$(colorcode darkgrey)[\t] $(colorcode magenta)\u$(colorcode darkgrey):$(colorcode cyan)\W/$(colorcode red)$(get_git_prompt) $(colorcode green)\$$(colorcode default) "';
