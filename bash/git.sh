@@ -80,15 +80,17 @@ function get_git_prompt () {
     fi
 }
 
+export GIT_BASE_BRANCH="main" # some use the problematic master term, some use main.
+
 # Create a feature branch that's up to date with latest master
 # then push it to remote origin
 function feature_branch() {
     branchName="$1"
     if [ "$branchName" != "" ]; then
-        echo "Checking out and updating master";
-        git checkout master && git pull;
-        echo "Creating local branch from master and tracking origin"
-        git checkout -b "$branchName" -t origin/master
+        echo "Checking out and updating $GIT_BASE_BRANCH";
+        git checkout $GIT_BASE_BRANCH && git pull;
+        echo "Creating local branch from $GIT_BASE_BRANCH and tracking origin"
+        git checkout -b "$branchName" -t origin/$GIT_BASE_BRANCH
     else
         echo "No branch name provided!"
     fi

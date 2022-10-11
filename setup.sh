@@ -1,30 +1,34 @@
-# core things that have to happen to get a MacOS setup to work
-# this assumes things like XCode & its cli tools are already installed
-
-# make sure the zshrc exists (it should, but... things break if it isn't and it doesn't by default)
-touch ~/.zshrc
+#!/bin/zsh
+# Description: things that have to happen to get these to work cleanly in MacOS
 
 # first, lets make sure xcode's cli tools are installed.
 xcode-select --install
 
-# now lets install homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+# Make sure the zshrc exists (it should, but... things break if it isn't and it doesn't by default)
+touch ~/.zshrc
+# Create a git directory in user home, this will be where any git projects will live
+mkdir ~/git 
 
-# and now node version manager
+# Install node version manager (nvm)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
-# then install bash completions (good for zsh and bash)
-brew install bash-completion
+# Install homebrew if it's not installed
+if ! type "brew" > /dev/null; then
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+fi
 
-# Uncomment below if you want to use bash instead of zsh in MocOS
-# # install newest bash
-# brew install bash
-# # now add the new bash to the shell list. Has to be sudo
-# echo "/usr/local/bin/bash" | sudo tee -a /etc/shells
-# # now change shell for the current user
-# chsh -s /usr/local/bin/bash
-# # now do it for the root user (me)
-# sudo chsh -s /usr/local/bin/bash
-# # now add a bashrc and bash_profile for terminal
-# touch ~/.bashrc
-# echo "source ~/.bashrc" > ~/.bash_profile
+# then install bash completions (good for zsh and bash)
+if type "brew" > /dev/null; then
+    # Why in a if? Because xcode-select --install can be weird
+    # and it might run brew install and fail due to not being done installing 
+  brew install bash-completion
+fi
+
+# Reload zsh config to make sure things like NVM and Homebrew are loaded
+source ~/.zshrc
+
+# Install and use latest stable version of NodeJS
+nvm install stable
+nvm use stable
+corepack enable
+corepack enable yarn
