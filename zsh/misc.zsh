@@ -1,4 +1,9 @@
+# Make Directory then cd into it. -p will  create recursively
+function mkcd() {
+  mkdir -p "$1" && cd "$_" || return
+}
 
+# Directory tree traversal and listing: d lists, d <num> goes to that entry
 d() {
     if (( $# == 0 )) ; then
         dirs -v
@@ -54,5 +59,29 @@ gzsize() {
     d=$(<"$1");
     echo "original: $(echo "$d" | wc -c | bytesToHuman)";
     echo " gzipped: $(gzip -c "$1" | wc -c | bytesToHuman)";
+  fi
+}
+
+# Who has time to remember the right extract commands 
+# for all the possible formats?
+function extract () {
+  if [ -f "$1" ] ; then
+    case $1 in
+      *.tar.bz2)   tar xvjf "$1"    ;;
+      *.tar.gz)    tar xvzf "$1"    ;;
+      *.tar.xz)    tar Jxvf "$1"    ;;
+      *.bz2)       bunzip2 "$1"     ;;
+      *.rar)       rar x "$1"       ;;
+      *.gz)        gunzip "$1"      ;;
+      *.tar)       tar xvf "$1"     ;;
+      *.tbz2)      tar xvjf "$1"    ;;
+      *.tgz)       tar xvzf "$1"    ;;
+      *.zip)       unzip -d "$(echo "$1" | sed 's/\(.*\)\.zip/\1/')" "$1";;
+      *.Z)         uncompress "$1"  ;;
+      *.7z)        7z x "$1"        ;;
+      *)           echo "Sorry, I don't know how to extract '$1'" ;;
+    esac
+  else
+    echo "'$1' does not appear to be a valid file."
   fi
 }

@@ -1,14 +1,23 @@
 # Basic Setup for zsh
 
 # Some color flags
-# First we tell the terminal to use colors
+# First we tell the terminal to use colors and support 256 of them
 # then we define the linux style LS_COLORS vs the BSD/MacOS style LSCOLORS
 # Why? Because a lot of zsh tools only know the linux style, so we need it for completion/etc
 # default is LSCOLORS=exfxcxdxbxegedabagacad, this translates into
 # LS_COLORS="di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
 # use this tool to customize: https://github.com/ggreer/lscolors
+export TERM="xterm-256color"
 export CLICOLOR=1; 
 export LS_COLORS="di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
+# this colorizes man/help pages
+export LESS_TERMCAP_mb=$(print -P "%F{cyan}") \
+    LESS_TERMCAP_md=$(print -P "%B%F{red}") \
+    LESS_TERMCAP_me=$(print -P "%f%b") \
+    LESS_TERMCAP_so=$(print -P "%K{magenta}") \
+    LESS_TERMCAP_se=$(print -P "%K{black}") \
+    LESS_TERMCAP_us=$(print -P "%U%F{green}") \
+    LESS_TERMCAP_ue=$(print -P "%f%u")
 
 #### Load Functions ####
 autoload -Uz vcs_info           # Load version control information
@@ -26,6 +35,7 @@ setopt CORRECT_ALL              # Turn on spelling correction for all arguments
 setopt AUTO_PUSHD               # Push the current directory visited on the stack.
 setopt PUSHD_IGNORE_DUPS        # Do not store duplicates in the stack.
 setopt PUSHD_SILENT             # Do not print the directory stack after pushd or popd.
+setopt NOBEEP                   # Turns off all beeps, shockingly.
 
 #### History Config ####
 HISTFILE=${ZDOTDIR:-$HOME}/.zsh_history
@@ -69,12 +79,23 @@ zstyle ':completion:*' squeeze-slashes true                             # uses m
 # single string is important otherwise updating strings like vcs info won't update!
 PROMPT='%F{8}[%*] %F{13}%n%F{8}:%F{14}%1~ %F{9}${vcs_info_msg_0_} %F{10}$%f '
 
-# bash (and zsh) completions (if installed via homebrew, if not then comment out)
-[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
-
 #### Aliases ####
-alias ls="ls -lFhG"
+alias ls="ls -lFhG" ll='ls -alFhG' dir='ls -alFhG';
+alias grep='grep --color=auto';
 alias rmrf='rm -rf';
 alias ezsh="code ~/.zshrc";
-alias uzsh="source ~/.zshrc";
-alias cd..='cd ..';
+alias uzsh="source ~/.zshrc" reload="source ~/.zshrc";
+alias cd..='cd ..' up='cd ..';
+alias ffs='sudo !!';                    # redoes last command with sudo
+alias -g 2clip='| pbcopy';              # pipe output to clipboard
+alias -g clip2='pbpaste |';             # pipe clipboard to command
+alias -g 2cb='| pbcopy';                # pipe output to clipboard
+alias -g cb2='pbpaste |';               # pipe clipboard to command
+alias -s {js,ts,json,md,yaml,yml}=code; # open extensions in code
+alias -s log='tail -n10';               # 
+
+# bash (and zsh) completions (if installed via homebrew, if not then comment out)
+[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
+# NVM setup
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm

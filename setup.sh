@@ -1,11 +1,17 @@
 # core things that have to happen to get a MacOS setup to work
 # this assumes things like XCode & its cli tools are already installed
 
+# make sure the zshrc exists (it should, but... things break if it isn't and it doesn't by default)
+touch ~/.zshrc
+
 # first, lets make sure xcode's cli tools are installed.
 xcode-select --install
 
 # now lets install homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
+# and now node version manager
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
 # then install bash completions (good for zsh and bash)
 brew install bash-completion
