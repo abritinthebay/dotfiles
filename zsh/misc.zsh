@@ -85,3 +85,25 @@ function extract () {
     echo "'$1' does not appear to be a valid file."
   fi
 }
+
+function __getSedLength() {
+  local num;
+  num="$1"
+  if [ -z "$1" ]; then
+    num=10; # nice round default
+  fi
+  echo "$(($num - 1))";
+}
+
+# padding functions usage (l|r)pad  <input> <pad string> <pad to length (defaults to 10)>
+function rpad () {
+  echo "$1" | sed -e :a -e "s/^.\{1,$(__getSedLength $3)\}$/&$2/;ta"
+}
+function lpad () {
+  echo "$1" | sed -e :a -e "s/^.\{1,$(__getSedLength $3)\}$/$2&/;ta"
+}
+
+# get last N from input. usage: lastN <number> <input>
+function lastN() {
+    echo ${2: $((${#2}-${1})):$((${#2}))};
+}
