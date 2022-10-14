@@ -10,7 +10,9 @@ touch ~/.zshrc
 mkdir ~/git 
 
 # Install node version manager (nvm)
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+if ! type "nvm" > /dev/null; then
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+fi
 
 # Install homebrew if it's not installed
 if ! type "brew" > /dev/null; then
@@ -21,14 +23,30 @@ fi
 if type "brew" > /dev/null; then
     # Why in a if? Because xcode-select --install can be weird
     # and it might run brew install and fail due to not being done installing 
-  brew install bash-completion
+  brew install bash-completion;
+  brew install jq;                      # JSON querying
+  brew install htop;                    # activity monitor for the shell
+  brew install wget;
+  brew install tmux;
+  brew install tldr;                    # summarizes man pages
+  brew install imagemagick;
+  brew install ffmpeg;
+  brew install spark;                   # sparklines for the shell. See https://github.com/holman/spark
+  brew install lolcat;                  # rainbow colorizes any input
+  brew install handbrake;               # video transcoder
+  brew install zsh-syntax-highlighting; # does what it says on the tin
+  # note: probably need to add to END of .zshrc  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  brew install zsh-autosuggestions;
+  # should add source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
 # Reload zsh config to make sure things like NVM and Homebrew are loaded
 source ~/.zshrc
 
-# Install and use latest stable version of NodeJS
-nvm install stable
-nvm use stable
-corepack enable
-corepack enable yarn
+if type "nvm" > /dev/null; then
+    # Install and use latest stable version of NodeJS
+    nvm install stable
+    nvm use stable
+    corepack enable
+    corepack enable yarn
+fi

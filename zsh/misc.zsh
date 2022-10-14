@@ -3,6 +3,9 @@ function mkcd() {
   mkdir -p "$1" && cd "$_" || return
 }
 
+# Check if command exists. eg: _exists vim && export EDITOR=vim; or if _exists vim; then
+_exists() { (( $+commands[$1] )) }
+
 # Directory tree traversal and listing: d lists, d <num> goes to that entry
 d() {
     if (( $# == 0 )) ; then
