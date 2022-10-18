@@ -1,6 +1,9 @@
 function nanotime() {
     if [ -z "$1" ]; then
-        python3 -c 'import time; from decimal import *; print(time.time_ns());'; # nanoseconds since epoch
+        zmodload zsh/datetime;
+        for secs nsecs in $epochtime; do
+            echo $secs$nsecs; # seconds is the epoch timestamp (seconds) nsecs is the nanoseconds in the current second
+        done
     else
         rpad "$1" 0 $((${#1}+9)); # just pads with zeroes, as timestamps are by second
     fi
@@ -11,10 +14,12 @@ function microtime() {
 }
 
 function millitime() {
+    # mun fact - the same as Javascript's Date.now() timestamp
     echo "$(($(microtime $1) / 1000))";
 }
 
 # these get a <provided or current> time's number of milli/micro/nano seconds
+# (lastN is in the misc functions)
 function milliseconds() {
     lastN 3 $(millitime $1);
 }
