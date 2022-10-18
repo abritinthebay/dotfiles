@@ -19,14 +19,12 @@ export LESS_TERMCAP_mb=$(print -P "%F{cyan}") \
     LESS_TERMCAP_us=$(print -P "%U%F{green}") \
     LESS_TERMCAP_ue=$(print -P "%f%u")
 
-#### Load Functions ####
-autoload -Uz vcs_info;              # Load version control information
-autoload -Uz compinit; compinit;    # Load Zsh Completion System
-autoload zmv;                       # Load the pattern matching multiple file rename plugin 
-                                    # eg: zmv '(*).(jpg|jpeg)' 'epcot-$1.$2' (add -n for a dry run )
-#### Hooks ####
-precmd() { vcs_info }
-
+#set the generic editor, if we have VS Code installed (with it's command line tools) use that
+if (( $+commands[code] )); then
+    export EDITOR=code;
+else
+    export EDITOR=vim;
+fi
 #### Options ####
 setopt PROMPT_SUBST             # Enable substring substitution in prompt
 setopt NO_CASE_GLOB             # Case-insensitive globbing and tab-completion
@@ -37,11 +35,12 @@ setopt AUTO_PUSHD               # Push the current directory visited on the stac
 setopt PUSHD_IGNORE_DUPS        # Do not store duplicates in the stack.
 setopt PUSHD_SILENT             # Do not print the directory stack after pushd or popd.
 setopt NOBEEP                   # Turns off all beeps, shockingly.
+setopt NUMERICGLOBSORT          # sort filenames numerically when it makes sense
 
 #### History Config ####
 HISTFILE=${ZDOTDIR:-$HOME}/.zsh_history
-SAVEHIST=5000
-HISTSIZE=2000
+SAVEHIST=20000
+HISTSIZE=10000
 setopt EXTENDED_HISTORY         # Add time, execution length, etc to history file
 setopt APPEND_HISTORY           # Append to history rather than overwrite
 setopt INC_APPEND_HISTORY       # Adds to history as entered, not at shell exit
@@ -49,6 +48,22 @@ setopt HIST_EXPIRE_DUPS_FIRST   # expire duplicates first in history
 setopt HIST_IGNORE_DUPS         # do not store duplications in history
 setopt HIST_FIND_NO_DUPS        # ignore duplicates in history when searching
 setopt HIST_REDUCE_BLANKS       # removes blank lines from history
+setopt HIST_IGNORE_SPACE        # ignore commands that start with space
+setopt HIST_VERIFY              # show command with history expansion to user before running it
+setopt SHARE_HISTORY            # share command history data
+
+#### Load Functions ####
+autoload -Uz vcs_info;              # Load version control information
+autoload -Uz compinit; compinit -i; # Load Zsh Completion System
+autoload zmv;                   # Load the pattern matching multiple file rename plugin 
+                                # eg: zmv '(*).(jpg|jpeg)' 'epcot-$1.$2' (add -n for a dry run )
+setopt MENU_COMPLETE            # Automatically highlight first element of completion menu
+setopt AUTO_LIST                # Automatically list choices on ambiguous completion.
+
+PROMPT_EOL_MARK=""              # hide EOL sign (normally '%')
+
+#### Hooks ####
+precmd() { vcs_info }
 
 #### Style Options ####
 # In zsh, the style mechanism is a flexible way of configuring shell add-ons that use functions,
@@ -62,21 +77,26 @@ zstyle ':vcs_info:git:*' formats       '(%b%u%c)'       # format for vcs_info
 zstyle ':vcs_info:git:*' actionformats '(%b|%a%u%c)'    # more formats for vcs_info
 zstyle ':completion:*' completer _extensions _expand_alias _complete _approximate   # setting up zsh completion 
 zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"     # sets the completion cache location
-zstyle ':completion:*' use-cache on                                     # turns on completion cache
-zstyle ':completion:*' group-name ''                                    # groups completions by type 
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}           # uses LS_COLORS for display
-zstyle ':completion:*' squeeze-slashes true                             # uses more unix-y slash display
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'       # case insensitive tab completion
+zstyle ':completion:*' use-cache on                             # turns on completion cache
+zstyle ':completion:*' group-name ''                            # groups completions by type 
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}   # uses LS_COLORS for display
+zstyle ':completion:*' squeeze-slashes true                     # uses more unix-y slash display
+zstyle ':completion:*:*:cd:*' tag-order local-directories directory-stack path-directories # Only display some tags for cd
 
 # Currently unused styles for setting up a different custom prompt
 # zstyle ':vcs_info:git:*' formats      $'%K{9}\ue0b0%F{52} \ue0a0 %b%u%c %f%k'
 # zstyle ':vcs_info:git:*' actionformats $'%K{9}\ue0b0%F{52} \ue0a0 %b|%a%u%c %f%k'
 
 #### Aliases ####
+alias history="history 0";              # force zsh to show the complete history      
 alias ls="ls -lFhG" ll='ls -alFhG' dir='ls -alFhG';
 alias rmrf='rm -rf';
 alias ezsh="code ~/.zshrc";
 alias uzsh="source ~/.zshrc" reload="source ~/.zshrc";
-alias cd..='cd ..';
+alias cd..='cd ..';     # because typos are annoying
+alias ..='cd ..';       # go up one directory
+alias ...='cd ../..';   # go up two directories
 alias ffs='sudo !!';                    # redoes last command with sudo
 alias -g 2clip='| pbcopy';              # pipe output to clipboard
 alias -g clip2='pbpaste |';             # pipe clipboard to command
@@ -85,9 +105,9 @@ alias -g cb2='pbpaste |';               # pipe clipboard to command
 alias -s {js,ts,json,md,yaml,yml}=code; # open {extensions} in code if directly accessed
 alias -s log='tail -n10';               # tail logs if directly accessed
 # colorized aliases
-alias grep='grep --color=auto';
-alias egrep='egrep --color=auto';
-alias fgrep='fgrep --color=auto';
+alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}';
+alias egrep='egrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}';
+alias fgrep='fgrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}';
 alias diff='diff --color=auto';
 alias ip='ip --color';
 alias df='df -h';
@@ -116,8 +136,15 @@ hashpwd() { hash -d "$1"="$PWD" }
 # single string is important otherwise updating strings like vcs info won't update!
 PROMPT='%F{8}[%*] %F{13}%n%F{8}:%F{14}%1~%F{9}${vcs_info_msg_0_} %F{10}$%f '
 
-# bash (and zsh) completions (if installed via homebrew, if not then comment out)
+# bash (and zsh) completions (if installed via homebrew)
 [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 # NVM setup
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# setting up Homebrew's version of command-not-found
+HB_CNF_HANDLER="$(brew --repository)/Library/Taps/homebrew/homebrew-command-not-found/handler.sh"
+if [ -f "$HB_CNF_HANDLER" ]; then
+    source "$HB_CNF_HANDLER";
+fi
