@@ -23,21 +23,23 @@ fi
 if type "brew" > /dev/null; then
     # Why in a if? Because xcode-select --install can be weird
     # and it might run brew install and fail due to not being done installing 
-  brew install bash-completion;
-  brew install jq;                      # JSON querying
-  brew install htop;                    # activity monitor for the shell
-  brew install wget;
-  brew install tmux;
-  brew install tldr;                    # summarizes man pages
-  brew install imagemagick;
-  brew install ffmpeg;
-  brew install spark;                   # sparklines for the shell. See https://github.com/holman/spark
-  brew install lolcat;                  # rainbow colorizes any input
-  brew install handbrake;               # video transcoder
-  brew install zsh-syntax-highlighting; # does what it says on the tin
-  # note: probably need to add to END of .zshrc  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-  brew install zsh-autosuggestions;
-  # should add source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    brew install bash-completion;
+    brew install jq;                      # JSON querying
+    brew install htop;                    # activity monitor for the shell
+    brew install wget;
+    brew install tmux;
+    brew install tldr;                    # summarizes man pages
+    brew install imagemagick;
+    brew install ffmpeg;
+    brew install spark;                   # sparklines for the shell. See https://github.com/holman/spark
+    brew install lolcat;                  # rainbow colorizes any input
+    brew install handbrake;               # video transcoder
+    brew install zsh-syntax-highlighting; # does what it says on the tin
+    echo "source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ~/.zshrc
+    brew install zsh-autosuggestions;
+    echo "source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
+    brew tap homebrew/command-not-found;  # suggestions for when a command is not found
+    # see https://github.com/Homebrew/homebrew-command-not-found
 fi
 
 # Reload zsh config to make sure things like NVM and Homebrew are loaded
