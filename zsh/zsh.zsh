@@ -57,6 +57,7 @@ autoload -Uz vcs_info;              # Load version control information
 autoload -Uz compinit; compinit -i; # Load Zsh Completion System
 autoload zmv;                   # Load the pattern matching multiple file rename plugin 
                                 # eg: zmv '(*).(jpg|jpeg)' 'epcot-$1.$2' (add -n for a dry run )
+autoload throw catch;           # allows you to use throw and catch in scripts
 setopt MENU_COMPLETE            # Automatically highlight first element of completion menu
 setopt AUTO_LIST                # Automatically list choices on ambiguous completion.
 

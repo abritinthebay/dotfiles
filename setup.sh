@@ -31,6 +31,7 @@ if type "brew" > /dev/null; then
     brew install tldr;                    # summarizes man pages
     brew install imagemagick;
     brew install ffmpeg;
+    brew install gs graphicsmagick;       # ghostscript (for pdfs+postscript)
     brew install spark;                   # sparklines for the shell. See https://github.com/holman/spark
     brew install lolcat;                  # rainbow colorizes any input
     brew install handbrake;               # video transcoder

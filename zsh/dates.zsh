@@ -1,5 +1,6 @@
 function nanotime() {
     if [ -z "$1" ]; then
+        local secs; local nsecs;
         zmodload zsh/datetime;
         for secs nsecs in $epochtime; do
             echo $secs$nsecs; # seconds is the epoch timestamp (seconds) nsecs is the nanoseconds in the current second

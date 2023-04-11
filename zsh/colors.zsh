@@ -74,19 +74,19 @@
 # 27    Reset reverse       echo -e "\033[7minverted \033[27mNormal"
 # 28    Reset hidden        echo -e "\033[8mHidden \033[28mNormal"
 declare -A __formatCodes=(
-    [resetall]=0
-    [bold]=1
-    [dim]=2
-    [underline]=4
-    [blink]=5
-    [invert]=7
-    [hidden]=8
-    [resetbold]=21
-    [resetdim]=22
-    [resetunderline]=24
-    [resetblink]=25
-    [resetinverse]=27
-    [resethidden]=28
+	[resetall]=0
+	[bold]=1
+	[dim]=2
+	[underline]=4
+	[blink]=5
+	[invert]=7
+	[hidden]=8
+	[resetbold]=21
+	[resetdim]=22
+	[resetunderline]=24
+	[resetblink]=25
+	[resetinverse]=27
+	[resethidden]=28
 );
 
 # Foreground (text)
@@ -109,23 +109,23 @@ declare -A __formatCodes=(
 # 96	Light cyan	    echo -e "Default \e[96mLight cyan"
 # 97	White	        echo -e "Default \e[97mWhite"
 declare -A __fgColors=(
-    [black]="30"
-    [red]="31"
-    [green]="32"
-    [yellow]="33"
-    [blue]="34"
-    [magenta]="35"
-    [cyan]="36"
-    [lightgrey]="37"
-    [default]="39"
-    [darkgrey]="90"
-    [lightred]="91"
-    [lightgreen]="92"
-    [lightyellow]="93"
-    [lightblue]="94"
-    [lightmagenta]="95"
-    [lightcyan]="96"
-    [white]="97"
+	[black]="30"
+	[red]="31"
+	[green]="32"
+	[yellow]="33"
+	[blue]="34"
+	[magenta]="35"
+	[cyan]="36"
+	[lightgrey]="37"
+	[default]="39"
+	[darkgrey]="90"
+	[lightred]="91"
+	[lightgreen]="92"
+	[lightyellow]="93"
+	[lightblue]="94"
+	[lightmagenta]="95"
+	[lightcyan]="96"
+	[white]="97"
 );
 
 # Background
@@ -148,134 +148,140 @@ declare -A __fgColors=(
 # 106	Light cyan	    echo -e "Default \e[106mLight cyan"
 # 107	White	        echo -e "Default \e[107mWhite"
 declare -A __bgColors=(
-    [black]="40"
-    [red]="41"
-    [green]="42"
-    [yellow]="43"
-    [blue]="44"
-    [magenta]="45"
-    [cyan]="46"
-    [lightgrey]="47"
-    [default]="49"
-    [darkgrey]="100"
-    [lightred]="101"
-    [lightgreen]="102"
-    [lightyellow]="103"
-    [lightblue]="104"
-    [lightmagenta]="105"
-    [lightcyan]="106"
-    [white]="107"
+	[black]="40"
+	[red]="41"
+	[green]="42"
+	[yellow]="43"
+	[blue]="44"
+	[magenta]="45"
+	[cyan]="46"
+	[lightgrey]="47"
+	[default]="49"
+	[darkgrey]="100"
+	[lightred]="101"
+	[lightgreen]="102"
+	[lightyellow]="103"
+	[lightblue]="104"
+	[lightmagenta]="105"
+	[lightcyan]="106"
+	[white]="107"
 );
 
 function __getFormat () {
-    local format="$1"
-    if [[ "$format" ]]; then
-        local code="${__formatCodes[$format]}";
-        if [[ "$code" ]]; then
-            echo "$code";
-        fi
-    fi
+	local format="$1"
+	if [[ "$format" ]]; then
+		local code="${__formatCodes[$format]}";
+		if [[ "$code" ]]; then
+			echo "$code";
+		fi
+	fi
 }
 
 function fgColor () {
-    local color="$1"
-    if [[ "$color" ]]; then
-        local code="${__fgColors[$color]}";
-        if [[ "$code" ]]; then
-            echo "$code";
-        fi
-    fi
+	local color="$1"
+	if [[ "$color" ]]; then
+		local code="${__fgColors[$color]}";
+		if [[ "$code" ]]; then
+			echo "$code";
+		fi
+	fi
 }
 
 function bgColor () {
-    local color="$1"
-    if [[ "$color" ]]; then
-        local code="${__bgColors[$color]}";
-        if [[ "$code" ]]; then
-            echo "$code";
-        fi
-    fi
+	local color="$1"
+	if [[ "$color" ]]; then
+		local code="${__bgColors[$color]}";
+		if [[ "$code" ]]; then
+			echo "$code";
+		fi
+	fi
 }
 
 function colorize() {
-    local code="$1";
-    local content="$2";
-    local term="\002";
-    local escape="\001\033[${code}m${term}";
-    local reset="\001\033[0m${term}";
-    local resultString="${escape}$content${reset}";
-    echo "$resultString";
+	local code="$1";
+	local content="$2";
+	local term="\002";
+	local escape="\001\033[${code}m${term}";
+	local reset="\001\033[0m${term}";
+	local resultString="${escape}$content${reset}";
+	echo "$resultString";
 }
 
 function colorcode() {
-    local fgColor="$1";
-    local bgColor="$2";
-    local format="$3";
-    local code="";  
-    if [[ "$fgColor" ]]; then
-        code="$(fgColor "$fgColor")";
-    fi
-    if [[ "$bgColor" ]]; then
-        echo "$bgColor";
-        if [[ "$code" ]]; then
-            code="$code;$(bgColor "$bgColor")"
-        else
-            code="$(bgColor "$bgColor")"
-        fi
-    fi
-    if [[ "$format" ]]; then
-        if [[ "$code" ]]; then
-            code="$code;$(__getFormat "$format")"
-        else
-            code="$(__getFormat "$format")";
-        fi
-    fi
-    local escape="\001\033[${code}m${term}";
-    local resultString="${escape}";
-    echo "\[$resultString\]";
+	local fgColor="$1";
+	local bgColor="$2";
+	local format="$3";
+	local code="";  
+	if [[ "$fgColor" ]]; then
+		code="$(fgColor "$fgColor")";
+	fi
+	if [[ "$bgColor" ]]; then
+		echo "$bgColor";
+		if [[ "$code" ]]; then
+			code="$code;$(bgColor "$bgColor")"
+		else
+			code="$(bgColor "$bgColor")"
+		fi
+	fi
+	if [[ "$format" ]]; then
+		if [[ "$code" ]]; then
+			code="$code;$(__getFormat "$format")"
+		else
+			code="$(__getFormat "$format")";
+		fi
+	fi
+	local escape="\001\033[${code}m${term}";
+	local resultString="${escape}";
+	echo "\[$resultString\]";
 }
 
 # paint text
 # usage: paint <text> <forground color name> <background color name> <format name>
 function paint() {
-    local content="$1";
-    local fgColor="$2";
-    local bgColor="$3";
-    local format="$4";
-    local code="";
-    if [[ "$content" ]]; then
-        if [[ "$fgColor" ]]; then
-            code="$(fgColor "$fgColor")";
-        fi
-        if [[ "$bgColor" ]]; then
-            if [[ "$code" ]]; then
-                code="$code;$(bgColor "$bgColor")"
-            else
-                code="$(bgColor "$bgColor")"
-            fi
-        fi
-        if [[ "$format" ]]; then
-            if [[ "$code" ]]; then
-                code="$code;$(__getFormat "$format")"
-            else
-                code="$(__getFormat "$format")";
-            fi
-        fi
-    fi
-    colorize "$code" "$content";
+	local content="$1";
+	local fgColor="$2";
+	local bgColor="$3";
+	local format="$4";
+	local code="";
+	if [[ "$content" ]]; then
+		if [[ "$fgColor" ]]; then
+			code="$(fgColor "$fgColor")";
+		fi
+		if [[ "$bgColor" ]]; then
+			if [[ "$code" ]]; then
+				code="$code;$(bgColor "$bgColor")"
+			else
+				code="$(bgColor "$bgColor")"
+			fi
+		fi
+		if [[ "$format" ]]; then
+			if [[ "$code" ]]; then
+				code="$code;$(__getFormat "$format")"
+			else
+				code="$(__getFormat "$format")";
+			fi
+		fi
+	fi
+	colorize "$code" "$content";
 }
 
+# Test Colors & Formatting
+# You can have different foreground and background colors as well as different
+# formatting. Not all colors or formatting are supported in all terminals.
 function __testColors () {
-    #Background
-    for clbg in {40..47} {100..107} 49 ; do
-        #Foreground
-        for clfg in {30..37} {90..97} 39 ; do
-            #Formatting
-            for attr in 0 1 2 4 5 7 ; do
-                #Print the result
-                echo -en "\e[${attr};${clbg};${clfg}m \\\e[${attr};${clbg};${clfg}m \e[0m"
-            done
-            echo #Newline
-        done
-    done
+	local clbg;
+	local clfg;
+	local attr;
+	for clbg in {40..47} {100..107} 49 ; do # Background color (if supported)
+		for clfg in {30..37} {90..97} 39 ; do # Foreground (if supported)
+			for attr in 0 1 2 4 5 7 8; do # Formatting 
+				echo -en "\e[${attr};${clbg};${clfg}m\\\e[${attr};${clbg};${clfg}m \e[0m"
+			done
+		echo;
+		done
+	done
 }
+
+alias bg='bgColor'
+alias fg='bgColor'
+alias _c='paint'
